@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A simple Todo List application" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="todo-card" aria-labelledby="page-title">
+        <header class="app-header">
+          <p class="eyebrow">TODAY'S FOCUS</p>
+          <h1 id="page-title">My tasks</h1>
+          <p id="task-summary" class="task-summary">Loading your tasks…</p>
+        </header>
+
+        <form id="todo-form" class="todo-form">
+          <label class="sr-only" for="todo-title">New task</label>
+          <input id="todo-title" name="title" type="text" maxlength="255" placeholder="What needs to be done?" autocomplete="off" required />
+          <button type="submit">Add task</button>
+        </form>
+
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+
+        <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
+
+        <div id="empty-state" class="empty-state" hidden>
+          <span class="empty-icon" aria-hidden="true">✓</span>
+          <h2>Nothing on your list</h2>
+          <p>Add a task above to get started.</p>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

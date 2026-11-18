@@ -5,10 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Todo List API is running' });
-});
+app.use(express.static('public'));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
