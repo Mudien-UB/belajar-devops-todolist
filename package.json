@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "build": "esbuild src/app.js --bundle --minify --sourcemap --outdir=dist",
+    "watch": "esbuild src/app.js --bundle --sourcemap --outdir=dist --watch",
+    "start": "npm run build && node index.js",
     "test": "node --test"
   },
   "repository": {
@@ -24,6 +26,7 @@
     "express": "^5.3.0"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "prisma": "^7.10.1"
   }
 }

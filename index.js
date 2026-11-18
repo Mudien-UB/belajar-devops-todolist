@@ -6,6 +6,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/dist', express.static('dist'));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
