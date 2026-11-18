@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createTodoController } from '../controllers/todoController.js';
+import { createTodoController } from '../controllers/todoControllerFactory.js';
 
 function createResponse() {
   return {
