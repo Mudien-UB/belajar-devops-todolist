@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
       - name: Setup Environment
         uses: ./.github/actions/setup-node
 
@@ -30,6 +33,9 @@ jobs:
     needs: test
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
       - name: Setup Environment
         uses: ./.github/actions/setup-node
 
