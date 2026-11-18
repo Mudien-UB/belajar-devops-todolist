@@ -1,4 +1,5 @@
 node_modules/
 .env
+generated/
 public/css/output.css
 *.log
