@@ -46,49 +46,63 @@ function getValidId(req, res) {
   return id;
 }
 
-export async function listTodos(req, res) {
-  const todos = await prisma.todo.findMany({ orderBy: { createdAt: 'desc' } });
-  res.status(200).json({ data: todos });
+export function createTodoController(database) {
+  return {
+    async listTodos(req, res) {
+      const todos = await database.todo.findMany({ orderBy: { createdAt: 'desc' } });
+      return res.status(200).json({ data: todos });
+    },
+
+    async getTodo(req, res) {
+      const id = getValidId(req, res);
+      if (!id) return;
+
+      const todo = await database.todo.findUnique({ where: { id } });
+      if (!todo) return res.status(404).json({ error: 'Todo not found.' });
+      return res.status(200).json({ data: todo });
+    },
+
+    async createTodo(req, res) {
+      const validation = validateTodoInput(req.body);
+      if (validation.error) return res.status(400).json({ error: validation.error });
+
+      const todo = await database.todo.create({ data: validation.data });
+      return res.status(201).json({ data: todo });
+    },
+
+    async updateTodo(req, res) {
+      const id = getValidId(req, res);
+      if (!id) return;
+
+      const validation = validateTodoInput(req.body, { partial: true });
+      if (validation.error) return res.status(400).json({ error: validation.error });
+
+      const existingTodo = await database.todo.findUnique({ where: { id } });
+      if (!existingTodo) return res.status(404).json({ error: 'Todo not found.' });
+
+      const todo = await database.todo.update({ where: { id }, data: validation.data });
+      return res.status(200).json({ data: todo });
+    },
+
+    async deleteTodo(req, res) {
+      const id = getValidId(req, res);
+      if (!id) return;
+
+      const existingTodo = await database.todo.findUnique({ where: { id } });
+      if (!existingTodo) return res.status(404).json({ error: 'Todo not found.' });
+
+      await database.todo.delete({ where: { id } });
+      return res.status(204).send();
+    },
+  };
 }
 
-export async function getTodo(req, res) {
-  const id = getValidId(req, res);
-  if (!id) return;
+const todoController = createTodoController(prisma);
 
-  const todo = await prisma.todo.findUnique({ where: { id } });
-  if (!todo) return res.status(404).json({ error: 'Todo not found.' });
-  return res.status(200).json({ data: todo });
-}
-
-export async function createTodo(req, res) {
-  const validation = validateTodoInput(req.body);
-  if (validation.error) return res.status(400).json({ error: validation.error });
-
-  const todo = await prisma.todo.create({ data: validation.data });
-  return res.status(201).json({ data: todo });
-}
-
-export async function updateTodo(req, res) {
-  const id = getValidId(req, res);
-  if (!id) return;
-
-  const validation = validateTodoInput(req.body, { partial: true });
-  if (validation.error) return res.status(400).json({ error: validation.error });
-
-  const existingTodo = await prisma.todo.findUnique({ where: { id } });
-  if (!existingTodo) return res.status(404).json({ error: 'Todo not found.' });
-
-  const todo = await prisma.todo.update({ where: { id }, data: validation.data });
-  return res.status(200).json({ data: todo });
-}
-
-export async function deleteTodo(req, res) {
-  const id = getValidId(req, res);
-  if (!id) return;
-
-  const existingTodo = await prisma.todo.findUnique({ where: { id } });
-  if (!existingTodo) return res.status(404).json({ error: 'Todo not found.' });
-
-  await prisma.todo.delete({ where: { id } });
-  return res.status(204).send();
-}
+export const {
+  listTodos,
+  getTodo,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} = todoController;
